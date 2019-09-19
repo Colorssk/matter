@@ -1,9 +1,17 @@
 <template>
-    <Modal v-model="show" width='80%' :height="560" class="container">
+    <Modal v-model="show" v-if="show" width='80%' :height="560" class="container" @on-ok="ok" @on-cancel="cancel">
+    
+    
     
         <div class="paint-container">
     
-            <div class="pannel-container" style="height: 560px; width: 500px ;overflow-y:scroll; position: relative; background: linear-gradient(-90deg, rgba(0, 0, 0, 0.1) 1px, transparent 1px) 0% 0% / 20px 20px, linear-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px) 0% 0% / 20px 20px;">
+    
+    
+            <div class="pannel-container" style="height: 560px; width: 500px ;overflow-x:hidden;overflow-y:scroll; position: relative; background: linear-gradient(-90deg, rgba(0, 0, 0, 0.1) 1px, transparent 1px) 0% 0% / 20px 20px, linear-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px) 0% 0% / 20px 20px;">
+    
+    
+    
+    
     
     
     
@@ -11,23 +19,51 @@
     
     
     
-                    <vue-draggable-resizable class="card_com_style" :grid="[20,20]" :z="1">
     
     
     
-                    </vue-draggable-resizable>
+    
+                    <!-- <vue-draggable-resizable class="card_com_style" :grid="[20,20]" :z="1">
+    
+        
+    
+        
+    
+        
+    
+                        </vue-draggable-resizable>
+    
+        
+    
+        
+    
+        
+    
+                        <vue-draggable-resizable class="table_com_style" :grid="[20,20]" :z="99">
+    
+        
+    
+        
+    
+        
+    
+                        </vue-draggable-resizable> -->
     
     
     
-                    <vue-draggable-resizable class="table_com_style" :grid="[20,20]" :z="99">
     
-    
-    
-                    </vue-draggable-resizable>
     
     
     
                 </div>
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -43,7 +79,23 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
         </div>
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -55,7 +107,15 @@
     
     
     
+    
+    
+    
+    
             <ul class="com-ul-list-style">
+    
+    
+    
+    
     
     
     
@@ -63,7 +123,15 @@
     
     
     
+    
+    
+    
+    
                     <div class="part">
+    
+    
+    
+    
     
     
     
@@ -71,7 +139,15 @@
     
     
     
+    
+    
+    
+    
                         <div class="part-info-style">{{part.name}}</div>
+    
+    
+    
+    
     
     
     
@@ -79,7 +155,15 @@
     
     
     
+    
+    
+    
+    
                 </li>
+    
+    
+    
+    
     
     
     
@@ -87,7 +171,15 @@
     
     
     
+    
+    
+    
+    
         </div>
+    
+    
+    
+    
     
     
     
@@ -95,7 +187,15 @@
     
     
     
+    
+    
+    
+    
             <Form :model="pannelAction" :label-width="80">
+    
+    
+    
+    
     
     
     
@@ -103,7 +203,15 @@
     
     
     
+    
+    
+    
+    
                     <Row>
+    
+    
+    
+    
     
     
     
@@ -111,11 +219,23 @@
     
     
     
+    
+    
+    
+    
                         <Input v-model="pannelAction.actionPannnelHeight" placeholder="操作面板高度" style="width: 100px" />
     
     
     
+    
+    
+    
+    
                         </Col>
+    
+    
+    
+    
     
     
     
@@ -123,11 +243,27 @@
     
     
     
+    
+    
+    
+    
                         <Button type="primary" class="ripple" :ghost="true" size="small" @click="action('actionPannnelHeight',pannelAction.actionPannnelHeight)">应用</Button>
     
     
     
+    
+    
+    
+    
                         </Col>
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -137,13 +273,49 @@
     
                     </Row>
     
-    
-    
-    
-    
-    
-    
                 </FormItem>
+    
+                <!-- 小组建属性面板 -->
+    
+                <Row v-if="sComShow" style="border: 1px dashed red; padding-top:20px;">
+    
+                    <FormItem label="组建属性:">
+    
+                        <Col :span="11">
+    
+                        <Input v-model="pannelAction.sComWidth" placeholder="小组件宽度" style="width: 100px" />
+    
+                        </Col>
+    
+    
+    
+                    </FormItem>
+    
+                    <FormItem label="">
+    
+                        <Col :span="11">
+    
+                        <Input v-model="pannelAction.sComHeight" placeholder="小组件高度" style="width: 100px" />
+    
+                        </Col>
+    
+                    </FormItem>
+    
+                    <FormItem label="">
+    
+                        <Col :span="11">
+    
+                        <Button class="ripple" @click="paintSCom">绘制</Button>
+    
+                        </Col>
+    
+                    </FormItem>
+    
+                </Row>
+    
+    
+    
+    
     
     
     
@@ -151,7 +323,19 @@
     
     
     
+    
+    
+    
+    
         </div>
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -170,9 +354,18 @@ export default {
     data() {
         return {
             show: true,
+            sComShow: false, // 小组件属性显示
+            nowType: '', //当前选中组件类型
+            // 有操作属性的小组件列表
+            sComList: [
+                'input',
+                'select'
+            ],
             actionPannnelHeight: '560',
             pannelAction: {
-                actionPannnelHeight: ''
+                actionPannnelHeight: '', // 绘制面板高度
+                sComWidth: '', // 小组件宽度
+                sComHeight: '' // 小组件高度
             },
             computedPannelHight: 700,
             parts: [{
@@ -183,6 +376,14 @@ export default {
                     name: '卡片',
                     type: 'card'
                 },
+                {
+                    name: '输入框',
+                    type: 'input'
+                },
+                {
+                    name: '选择框',
+                    type: 'select'
+                }
             ]
         }
     },
@@ -197,13 +398,46 @@ export default {
         }
     },
     methods: {
+        paintSCom() {
+            if(this.pannelAction.sComWidth&&this.pannelAction.sComHeight){
+                createVueDragable($('.com-container')[0], { 'type': this.nowType,width:this.pannelAction.sComWidth,height: this.pannelAction.sComHeight})
+                this.nowType = ''
+                this.sComShow = false
+                this.$set(this.pannelAction,'sComWidth','')
+                this.$set(this.pannelAction,'sComHeight','')
+            }else{
+                this.$Message.info('请输入宽高')
+            }
+            
+        },
+        ok() {
+            this.show = false
+        },
+        cancel() {
+            this.show = false
+        },
         action(key, value) {
             this.computedPannelHight = value
         },
         // 添加组件
-        addComToPaint(type){
-            console.log();
-            createVueDragable($('.com-container')[0],{'type':type})
+        addComToPaint(type) {
+            console.log(this.nowType)
+            
+            if (this.nowType.length==0) {// 未有选中的小组件
+                let filter = this.sComList.filter(el => {
+                    return type == el
+                })
+
+                if (filter.length == 0) {
+                    createVueDragable($('.com-container')[0], { 'type': type })
+                    this.nowType = ''
+                } else {
+                    this.nowType = type
+                    this.sComShow = true
+                }
+            } else {
+                this.$Message.info('有组件未添加属性')
+            }
         }
     }
 }
@@ -211,6 +445,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/styles/common.scss";
+@import "@/styles/vueDragable.scss";
 .paint-container {
     display: inline-block;
     width: 500px;
@@ -245,19 +480,10 @@ export default {
     background: black;
 }
 
-.card_com_style {
-    background-image: url("../../assets/components_images/card.png");
-    background-size: 100% 100%;
-}
-
-.table_com_style {
-    background-image: url("../../assets/components_images/table.png");
-    background-size: 100% 100%;
-}
-
 .com-container {
-    width: 100%;
+    width: 500px;
     height: 700px;
+    overflow-x: hidden;
 }
 
 .part-bg-style {
@@ -284,11 +510,12 @@ export default {
     text-align: center;
     height: 50px;
 }
-.com-ul-list-style{
-    width:250px;
-    height:560px;
-    overflow-y:scroll;
-    position:relative;
-    overflow-x:hidden;
+
+.com-ul-list-style {
+    width: 250px;
+    height: 560px;
+    overflow-y: scroll;
+    position: relative;
+    overflow-x: hidden;
 }
 </style>

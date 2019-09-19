@@ -4,15 +4,16 @@ import PannelPage from '@/views/model/index.vue';
 import vueDragable from '@/components/vueDragableCom/index.vue';
 import { comTypes } from '@/api/dragableComType.js';
 export const createVueDragable = (el,options)=>{
-    const dragable = Vue.extend(vueDragable);
-    const instance  = new dragable;
+    var dragable = Vue.extend(vueDragable);
+    var instance  = new dragable;
     instance.vm = instance.$mount();
     instance.vm.className = comTypes[options.type].className
     instance.vm.zIndex = comTypes[options.type].zIndex
-    console.log(instance.vm.className)
-   
+    if(options.width&&options.height){
+        instance.vm.width = options.width
+        instance.vm.height = options.height
+    }
     el.appendChild(instance.vm.$el);
-    return instance.vm
 }
 
 export const addPannelCom = () => {
