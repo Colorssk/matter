@@ -4,13 +4,16 @@ const rule = {
         str = str.replace('$column',param.column).replace('$data',param.data);
         return str
     },
-    "input": (str) => {
+    "input": (str,param) => {
+        str = str.replace(/\$model/ig,param.model);
         return str
     },
-    "select": (str) => {
+    "select": (str,param) => {
+        str = str.replace(/\$model/ig,param.model);
         return str
     },
-    "form": (str) => {
+    "form": (str,param) => {
+        str = str.replace(/\$model/ig,param.model);
         return str
     },
     "card": (str,param) => {

@@ -1,6 +1,7 @@
 const fs = require('fs')
 const htmlModel = require('./htmlModel.js')
 const rule = require('./rule.js')
+var str = ''
 fs.readFile(__dirname + "/build.json",'utf-8', function (err, data) {
 
     if (err) { throw err; }
@@ -9,15 +10,60 @@ fs.readFile(__dirname + "/build.json",'utf-8', function (err, data) {
  
     let rootData = JSON.parse(JSON.stringify(fileData.root))
     getHtml(rootData)
+    console.log(str)
    
    
 
 });
 var getHtml = (data) => {
+    let tempData
     data.forEach(el => {
-        console.log(rule[el.type](htmlModel[el.type],el))
+        
+        if((/\$children/).test(str)){// 注入子节点
+            // 如果植入的节点也包含子节点
+            if(el.children&&el.children.length>0){
+                tempData = insetSign(rule[el.type](htmlModel[el.type],el)+'\r\n',el.children.length,el.type=='row')
+                str = str.replace('$children',tempData)
+            }else{
+                str = str.replace('$children',rule[el.type](htmlModel[el.type],el)+'\r\n')
+            }
+            
+            console.log(1)
+            console.log(rule[el.type](htmlModel[el.type],el))
+            console.log(str)
+        }else{//无需要插入的片段
+            if(el.children&&el.children.length>0){// 有子节点：植入标识
+                
+                str += insetSign(rule[el.type](htmlModel[el.type],el)+'\r\n',el.children.length,el.type=='row')
+                console.log(2)
+                console.log(str)
+              }else{//无子节点 叶子结点
+                str += rule[el.type](htmlModel[el.type],el)+'\r\n'
+                console.log(3)
+                console.log(str)
+              }
+            
+        }
         if(el.children&&el.children.length>0){
             getHtml(el.children)
         }
     });
+}
+var insetSign = (elData,length,flag=false) => {
+    console.log(flag)
+    let totalSinStr=''
+    let result
+    if(flag){//标签是row标签
+        for(let i = 0;i<length;i++){
+            totalSinStr += '<Col :span="'+parseInt(24/length)+'">$children</Col>' 
+        }
+        result = elData.replace('\>\<',`>${totalSinStr.trim()}<`);
+    }else{
+        for(let i = 0;i<length;i++){
+            totalSinStr += '$children' 
+        }
+        result = elData.replace('\>\<',`>${totalSinStr.trim()}<`);
+        }
+    
+    return result
 }
