@@ -1,359 +1,119 @@
+<!--
+ * @Descripttion: 
+ * @version: 
+ * @Author: Colorssk
+ * @Date: 2019-09-16 10:26:48
+ * @LastEditors: Colorssk
+ * @LastEditTime: 2019-09-29 16:23:57
+ -->
 <template>
-    <Modal v-model="show" v-if="show" width='80%' :height="560" class="container" @on-ok="ok" @on-cancel="cancel">
-    
-    
-    
+    <Modal v-model="show" v-if="show" width='80%' :height="560" class="container">
         <div class="paint-container">
-    
-    
-    
             <div class="pannel-container" style="height: 560px; width: 500px ;overflow-x:hidden;overflow-y:scroll; position: relative; background: linear-gradient(-90deg, rgba(0, 0, 0, 0.1) 1px, transparent 1px) 0% 0% / 20px 20px, linear-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px) 0% 0% / 20px 20px;">
-    
-    
-    
-    
-    
-    
-    
-                <div :style="computedStyle" class="com-container">
-    
-    
-    
-    
-    
-    
-    
-                    <!-- <vue-draggable-resizable class="card_com_style" :grid="[20,20]" :z="1">
-    
-        
-    
-        
-    
-        
-    
-                        </vue-draggable-resizable>
-    
-        
-    
-        
-    
-        
-    
+                <div :style="computedStyle" class="com-container"> 
+                    <!-- <vue-draggable-resizable class="card_com_style" :grid="[20,20]" :z="1">  
+                        </vue-draggable-resizable>   
                         <vue-draggable-resizable class="table_com_style" :grid="[20,20]" :z="99">
-    
-        
-    
-        
-    
-        
-    
                         </vue-draggable-resizable> -->
-    
-    
-    
-    
-    
-    
-    
                 </div>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
             </div>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-        </div>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+        </div> 
         <div class="com-list">
-    
-    
-    
-    
-    
-    
-    
             <ul class="com-ul-list-style">
-    
-    
-    
-    
-    
-    
-    
-                <li class="ul-li-style" v-for="(part,index) in parts" :key="index">
-    
-    
-    
-    
-    
-    
-    
+                <li class="ul-li-style" v-for="(part,index) in parts" :key="index">   
                     <div class="part">
-    
-    
-    
-    
-    
-    
-    
                         <div :class="bgComputed(part.type)" @click="addComToPaint(part.type)"></div>
-    
-    
-    
-    
-    
-    
-    
                         <div class="part-info-style">{{part.name}}</div>
-    
-    
-    
-    
-    
-    
-    
                     </div>
-    
-    
-    
-    
-    
-    
-    
                 </li>
-    
-    
-    
-    
-    
-    
-    
             </ul>
-    
-    
-    
-    
-    
-    
-    
         </div>
-    
-    
-    
-    
-    
-    
-    
         <div class="pannel-action-list">
-    
-    
-    
-    
-    
-    
-    
             <Form :model="pannelAction" :label-width="80">
-    
-    
-    
-    
-    
-    
-    
                 <FormItem label="面板高度:">
-    
-    
-    
-    
-    
-    
-    
                     <Row>
-    
-    
-    
-    
-    
-    
-    
                         <Col span="11">
-    
-    
-    
-    
-    
-    
-    
-                        <Input v-model="pannelAction.actionPannnelHeight" placeholder="操作面板高度" style="width: 100px" />
-    
-    
-    
-    
-    
-    
-    
-                        </Col>
-    
-    
-    
-    
-    
-    
-    
+                        <Input v-model="pannelAction.actionPannnelHeight" placeholder="操作面板高度" style="width: 100px" />  
+                        </Col>   
                         <Col span="3" :offset="5">
-    
-    
-    
-    
-    
-    
-    
-                        <Button type="primary" class="ripple" :ghost="true" size="small" @click="action('actionPannnelHeight',pannelAction.actionPannnelHeight)">应用</Button>
-    
-    
-    
-    
-    
-    
-    
+                        <Button type="primary" class="ripple" :ghost="true" size="small" @click="action('actionPannnelHeight',pannelAction.actionPannnelHeight)">应用</Button>   
                         </Col>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-                    </Row>
-    
+                    </Row>  
                 </FormItem>
-    
                 <!-- 小组建属性面板 -->
-    
                 <Row v-if="sComShow" style="border: 1px dashed red; padding-top:20px;">
-    
                     <FormItem label="组建属性:">
-    
                         <Col :span="11">
-    
                         <Input v-model="pannelAction.sComWidth" placeholder="小组件宽度" style="width: 100px" />
-    
                         </Col>
-    
-    
-    
                     </FormItem>
-    
                     <FormItem label="">
-    
                         <Col :span="11">
-    
                         <Input v-model="pannelAction.sComHeight" placeholder="小组件高度" style="width: 100px" />
-    
                         </Col>
-    
                     </FormItem>
-    
                     <FormItem label="">
-    
                         <Col :span="11">
-    
-                        <Button class="ripple" @click="paintSCom">绘制</Button>
-    
+                        <Input v-model="pannelAction.label" placeholder="标签名" style="width: 100px" />
                         </Col>
-    
                     </FormItem>
-    
+                    <FormItem label="">
+                        <Col :span="11">
+                        <Input v-model="pannelAction.model" placeholder="变量名" style="width: 100px" />
+                        </Col>
+                    </FormItem>
+                    <FormItem label="">  
+                        <Col :span="11">   
+                        <Button class="ripple" @click="paintSCom">绘制</Button>
+                        </Col>
+                    </FormItem>
                 </Row>
-    
-    
-    
-    
-    
-    
-    
+                <!-- form表单配置 -->
+                <template v-if="pannelAction.forms.length>0">
+                    <div v-for="(form,index) in pannelAction.forms" :key="index">
+                        <Row style="border: 1px dashed red; padding-top:20px;">
+                            <FormItem label="form列表:">
+                                <Col :span="11">
+                                <Input v-model="form.model" placeholder="变量名" style="width: 100px" />
+                                </Col>
+                            </FormItem>
+                            <Icon type="md-close" style="font-size:18px;position:absolute;right:0px;top:0px; cursor:pointer" @click="deleteForm(index)"></Icon>
+                            <div style="width: 240px;text-align: center;height: 30px;"  v-for="(com,comIndex) in form.children" :key="comIndex">
+                                <span :class="{'style-red':ComComputedStyle(index,comIndex)}">{{com}}</span>
+                            </div>
+                        </Row>
+                        
+                    </div>
+                    <Row>
+                        <Col :span="11">   
+                            <Button class="ripple" style="margin-left:73%; margin-top:10px;" @click="addFormlist">添加form</Button>
+                        </Col>
+                    </Row>
+                </template>
+                <template v-if="pannelAction.forms.length==0">
+                    <div class="wait_logo_style" @click="addFormlist"></div>
+                </template>
             </Form>
-    
-    
-    
-    
-    
-    
-    
         </div>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+        <Progress v-if="progressShow" :percent="percent" status="active" />
+        <div slot="footer"><Button type="primary" @click="ok">确定</Button><Button>取消</Button></div>
     </Modal>
 </template>
 
 <script>
 import { createVueDragable } from '@/utils/util.js';
+import { util } from './util.js';
 import $ from 'jQuery';
 export default {
     name: 'medel',
     data() {
         return {
             show: true,
+            activeIndex: null,//forms列表中目前标红的id值
+            comContainerList: [],//当前在画板上的所有元素
+            progressShow: false,
+            timer: null,
+            percent: 0,
             sComShow: false, // 小组件属性显示
             nowType: '', //当前选中组件类型
             // 有操作属性的小组件列表
@@ -365,7 +125,10 @@ export default {
             pannelAction: {
                 actionPannnelHeight: '', // 绘制面板高度
                 sComWidth: '', // 小组件宽度
-                sComHeight: '' // 小组件高度
+                sComHeight: '', // 小组件高度
+                label: '', //标签名
+                model: '', // 变量名
+                forms: [], //表单列表
             },
             computedPannelHight: 700,
             parts: [{
@@ -388,6 +151,11 @@ export default {
         }
     },
     computed: {
+        ComComputedStyle(formIndex,comIndex){
+            return (formIndex,comIndex)=>{
+                return formIndex+'-'+comIndex == this.activeIndex ? true :false;
+            }
+        },
         computedStyle() {
             return 'height:' + this.computedPannelHight + 'px;'
         },
@@ -397,39 +165,120 @@ export default {
             }
         }
     },
+    mounted(){
+         $(document).on('click', (e) => {
+            // 获取到目前点击的元素
+            if(e.target.dataset.id){
+                this.pannelAction.forms.forEach((form,formIndex)=>{
+                    if(form.children){
+                        form.children.forEach((com,comIndex)=>{
+                            if(com == e.target.dataset.id){
+                                this.activeIndex = `${formIndex}-${comIndex}`
+                            }
+                        })
+                    }
+                })
+            }else{
+                //移除forms中所有标红
+                this.activeIndex = null
+            }
+         })
+    },
+    watch:{
+        percent(value){
+            if(value==100){
+                clearTimeout(this.timer)
+                this.timer = null
+                this.progressShow = false
+                this.show = false
+            }
+        }
+        
+    },
     methods: {
+        // 删除forms表单列表
+        deleteForm(index){
+            this.pannelAction.forms.splice(index,1);
+        },
+        // 添加forms表单列表
+        addFormlist(){
+            this.pannelAction.forms.push({model: 'form'+(Number(this.pannelAction.forms.length)+1),children:[]})
+        },
+        changeSrc(src){
+            $('.wait_logo_style').attr('src',src)
+        },
+        // 父组件调用用来删除绘制区域的组件
+        /*
+        @param:
+            id: 每个组件的唯一标识
+        */
+        deleteCom(id){
+            this.comContainerList.forEach((el,index)=>{
+                if(el.id == id){
+                    this.comContainerList.splice(index,1)
+                }
+            })
+        },
+        genID(length){
+            return Number(Math.random().toString().substr(3,length) + Date.now()).toString(36);
+            },
         paintSCom() {
             if(this.pannelAction.sComWidth&&this.pannelAction.sComHeight){
-                createVueDragable($('.com-container')[0], { 'type': this.nowType,width:this.pannelAction.sComWidth,height: this.pannelAction.sComHeight})
+                let temporaryId = this.genID()
+                createVueDragable($('.com-container')[0], { 'type': this.nowType,width:this.pannelAction.sComWidth,height: this.pannelAction.sComHeight,id:temporaryId,
+                label:this.pannelAction.label,model:this.pannelAction.model,parent:this})
+                this.comContainerList.push({id:temporaryId,type:this.nowType,width:this.pannelAction.sComWidth,height:this.pannelAction.sComHeight,x:0,y:0,label:this.pannelAction.label,model:this.pannelAction.model})
+
+
                 this.nowType = ''
                 this.sComShow = false
                 this.$set(this.pannelAction,'sComWidth','')
                 this.$set(this.pannelAction,'sComHeight','')
+                this.$set(this.pannelAction,'label','')
+                this.$set(this.pannelAction,'model','')
+               
             }else{
                 this.$Message.info('请输入宽高')
             }
             
         },
         ok() {
-            this.show = false
+            this.progressShow = true
+            // 获取数据
+            console.log(this.comContainerList,123)
+            this.timer = setInterval(()=>{
+                this.$nextTick(()=>{
+                    this.percent += 5
+                })
+                
+            },100);
+            //
+            var result = [];//最终一期处理之后的数据
+            // 处理1：制定元素放入form
+            // console.log(util.sortSCom.call(this,this.comContainerList),223)
+            var filename = "C:\\Users\\yanming\\Desktop\\物料\\wuliao\\ttt.json";
+            util.fsWrite(filename,util.buildFormList.call(this,this.comContainerList))
+            console.log(util.buildFormList.call(this,this.comContainerList),223)
+            
         },
         cancel() {
-            this.show = false
+            debugger
+            //this.show = false
         },
         action(key, value) {
             this.computedPannelHight = value
         },
         // 添加组件
         addComToPaint(type) {
-            console.log(this.nowType)
-            
             if (this.nowType.length==0) {// 未有选中的小组件
                 let filter = this.sComList.filter(el => {
                     return type == el
                 })
 
                 if (filter.length == 0) {
-                    createVueDragable($('.com-container')[0], { 'type': type })
+                    let temporaryId = this.genID()
+                    createVueDragable($('.com-container')[0], { 'type': type,id:temporaryId,parent:this })
+                    this.comContainerList.push({id:temporaryId,type:type,width:200,height:200,x:0,y:0})
                     this.nowType = ''
                 } else {
                     this.nowType = type
@@ -472,6 +321,7 @@ export default {
     height: 560px;
     float: right;
     border: 1px solid grey;
+    overflow-y: scroll;
 }
 
 .size-style {
@@ -518,4 +368,18 @@ export default {
     position: relative;
     overflow-x: hidden;
 }
+.wait_logo_style{
+    width: 248px;
+    height: 200px;
+    background-size: 100% 100%;
+    cursor: pointer;
+    background-image: url('../../assets/common_images/wait_add.gif');
+}
+.wait_logo_style:hover{ 
+    background-image: url('../../assets/common_images/wait_add_hover.png');
+}
+.style-red{
+    color: red;
+}
+
 </style>

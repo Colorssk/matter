@@ -10,8 +10,9 @@ fs.readFile(__dirname + "/build.json",'utf-8', function (err, data) {
  
     let rootData = JSON.parse(JSON.stringify(fileData.root))
     getHtml(rootData)
+    getJs(rootData)
     console.log(str)
-   
+    
    
 
 });
@@ -28,19 +29,19 @@ var getHtml = (data) => {
                 str = str.replace('$children',rule[el.type](htmlModel[el.type],el)+'\r\n')
             }
             
-            console.log(1)
-            console.log(rule[el.type](htmlModel[el.type],el))
-            console.log(str)
+            // console.log(1)
+            // console.log(rule[el.type](htmlModel[el.type],el))
+            // console.log(str)
         }else{//无需要插入的片段
             if(el.children&&el.children.length>0){// 有子节点：植入标识
                 
                 str += insetSign(rule[el.type](htmlModel[el.type],el)+'\r\n',el.children.length,el.type=='row')
-                console.log(2)
-                console.log(str)
+                // console.log(2)
+                // console.log(str)
               }else{//无子节点 叶子结点
                 str += rule[el.type](htmlModel[el.type],el)+'\r\n'
-                console.log(3)
-                console.log(str)
+                // console.log(3)
+                // console.log(str)
               }
             
         }
@@ -50,7 +51,6 @@ var getHtml = (data) => {
     });
 }
 var insetSign = (elData,length,flag=false) => {
-    console.log(flag)
     let totalSinStr=''
     let result
     if(flag){//标签是row标签
@@ -66,4 +66,7 @@ var insetSign = (elData,length,flag=false) => {
         }
     
     return result
+}
+var getJs = (data) => {
+    
 }

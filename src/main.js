@@ -18,6 +18,8 @@ import '@/permission' // permission control
 import iView from 'iview';
 import 'iview/dist/styles/iview.css';
 
+import lodash from 'lodash';
+
 import { addPannelCom } from '@/utils/util.js';
 import vdr from 'vue-draggable-resizable-gorkys';
 import 'vue-draggable-resizable-gorkys/dist/VueDraggableResizable.css';
@@ -43,6 +45,7 @@ Vue.component('vue-draggable-resizable', vdr);
 
 Vue.config.productionTip = false
 Vue.prototype.$addPannel = addPannelCom
+Vue.prototype._ = lodash
 
 new Vue({
   el: '#app',

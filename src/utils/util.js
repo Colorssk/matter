@@ -9,6 +9,9 @@ export const createVueDragable = (el,options)=>{
     instance.vm = instance.$mount();
     instance.vm.className = comTypes[options.type].className
     instance.vm.zIndex = comTypes[options.type].zIndex
+    console.log(options.parent)
+    instance.vm.$parent =  options.parent
+    instance.vm.id = options.id
     if(options.width&&options.height){
         instance.vm.width = options.width
         instance.vm.height = options.height
@@ -26,4 +29,7 @@ export const addPannelCom = () => {
     //     instance.vm.show = false
     // })
     return instance.vm;
+}
+export const compose = function(...funcs) {
+    return funcs.reduce((a, b) => (...args) => a(b(...args)))
 }
