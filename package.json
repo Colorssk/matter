@@ -6,6 +6,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "vue-cli-service serve",
+    "server": "nodemon server/server.js",
     "build:prod": "vue-cli-service build",
     "build:stage": "vue-cli-service build --mode staging",
     "preview": "node build/index.js --preview",
@@ -15,9 +16,11 @@
     "svgo": "svgo -f src/icons/svg --config=src/icons/svgo.yml"
   },
   "dependencies": {
-    "axios": "0.18.1",
+    "axios": "^0.18.1",
+    "body-parser": "^1.19.0",
     "element-ui": "2.7.2",
     "expose-loader": "^0.7.5",
+    "express": "^4.17.1",
     "iview": "^3.5.0",
     "jQuery": "^1.7.4",
     "jquery": "^3.4.1",
@@ -25,6 +28,7 @@
     "location": "0.0.1",
     "lodash": "^4.17.15",
     "navigator": "^1.0.1",
+    "nodemon": "^1.19.3",
     "normalize.css": "7.0.0",
     "nprogress": "0.2.0",
     "path-to-regexp": "2.4.0",

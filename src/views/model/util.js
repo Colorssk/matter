@@ -3,8 +3,8 @@
  * @version: 
  * @Author: sueRimn
  * @Date: 2019-09-26 15:29:21
- * @LastEditors: sueRimn
- * @LastEditTime: 2019-09-29 16:08:16
+ * @LastEditors: Colorssk
+ * @LastEditTime: 2019-10-10 14:40:19
  */
 import { SCom } from '../../type/whiteList.js'
 import  fs from 'fs';
@@ -126,14 +126,21 @@ export const util = {
    },
    // 筛选出小组件，并且包含在form列表中的小组件
    filterSCom(comList){
-       console.log(SCom)
         let result =  []
         result = this._.filter(comList,(c)=>{
             return this._.find(SCom,function(o){
                 return o == c.type
             })
         })
-        //增加逻辑，分装成二维数组，每个y轴相同的组件分装成一个数组
+        return result
+   },
+   filterBCom(comList){
+        let result =  []
+        result = this._.filter(comList,(c)=>{
+            return this._.find(SCom,function(o){
+                return o != c.type
+            })
+        })
         return result
    },
    //分类 重写 filterSCom方法,以form.model为key值存储
@@ -236,10 +243,21 @@ export const util = {
     })
     return filterSComFromForm
    },
-   fsWrite(filename,data){
-        fs.writeFileSync(filename, JSON.stringify(data));
-   }
-
+   // 把小组件和大组件一起整合
+   totalBuildFormList(comList){
+        var result
+        //处理过之后小组件集合
+        let SbuildData = util.buildFormList.call(this,comList)
+        // 初始数据的大组建集合
+        //let tempTotalList = util.filterBCom.call(this,this.comContainerList.slice())
+        console.log(this._.sortBy(this.comContainerList.slice()))
+        debugger
+        //对初始数据排序处理（剔除小组件之后的其他组建集合）
+        //this._.sortBy(tempTotalList,['y', 'x'])
+        result = {root: SbuildData}
+        return result
+   },
+   
 
    
 }

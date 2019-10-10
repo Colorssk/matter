@@ -1,3 +1,11 @@
+/*
+ * @Descripttion: 
+ * @version: 
+ * @Author: Colorssk
+ * @Date: 2019-09-06 18:02:20
+ * @LastEditors: Colorssk
+ * @LastEditTime: 2019-10-09 09:36:34
+ */
 'use strict'
 var webpack = require('webpack')
 const path = require('path')
@@ -45,6 +53,13 @@ module.exports = {
         changeOrigin: true,
         pathRewrite: {
           ['^' + process.env.VUE_APP_BASE_API]: ''
+        }
+      },
+      '/api':{
+        target: 'http://localhost:3000/',
+        changeOrigin:true,
+        pathRewrite: {
+          '/api': ''
         }
       }
     },

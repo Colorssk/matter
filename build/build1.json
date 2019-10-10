@@ -1,0 +1,45 @@
+{
+    "root": [
+        {
+            "type": "form",
+            "model": "form",
+            "children": [
+                {
+                    "type": "row",
+                    "children": [
+                        {
+                            "type": "input",
+                            "label": "测点编号",
+                            "model": "input1"
+                        },
+                        {
+                            "type": "select",
+                            "label": "测点编号",
+                            "model": "select1"
+                        }
+                    ]
+                },
+                {
+                    "type": "row",
+                    "children": [
+                        {
+                            "type": "input",
+                            "label": "测点编号第二列",
+                            "model": "input2"
+                        },
+                        {
+                            "type": "select",
+                            "label": "测点编号第二列",
+                            "model": "select2"
+                        },
+                        {
+                            "type": "select",
+                            "label": "测点编号第二列",
+                            "model": "select3"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -1,3 +1,11 @@
+/*
+ * @Descripttion: 
+ * @version: 
+ * @Author: Colorssk
+ * @Date: 2019-09-06 18:02:20
+ * @LastEditors: Colorssk
+ * @LastEditTime: 2019-09-06 18:02:20
+ */
 import Vue from 'vue'
 
 import 'normalize.css/normalize.css' // A modern alternative to CSS resets
@@ -17,6 +25,8 @@ import '@/permission' // permission control
 
 import iView from 'iview';
 import 'iview/dist/styles/iview.css';
+
+import axios from 'axios';
 
 import lodash from 'lodash';
 
@@ -45,6 +55,7 @@ Vue.component('vue-draggable-resizable', vdr);
 
 Vue.config.productionTip = false
 Vue.prototype.$addPannel = addPannelCom
+Vue.prototype.$axios = axios
 Vue.prototype._ = lodash
 
 new Vue({

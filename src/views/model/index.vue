@@ -4,7 +4,7 @@
  * @Author: Colorssk
  * @Date: 2019-09-16 10:26:48
  * @LastEditors: Colorssk
- * @LastEditTime: 2019-09-29 16:23:57
+ * @LastEditTime: 2019-10-09 11:30:43
  -->
 <template>
     <Modal v-model="show" v-if="show" width='80%' :height="560" class="container">
@@ -253,13 +253,16 @@ export default {
                 
             },100);
             //
-            var result = [];//最终一期处理之后的数据
+            // var result = [];//最终一期处理之后的数据
             // 处理1：制定元素放入form
             // console.log(util.sortSCom.call(this,this.comContainerList),223)
-            var filename = "C:\\Users\\yanming\\Desktop\\物料\\wuliao\\ttt.json";
-            util.fsWrite(filename,util.buildFormList.call(this,this.comContainerList))
-            console.log(util.buildFormList.call(this,this.comContainerList),223)
-            
+            //console.log(util.buildFormList.call(this,this.comContainerList),223)
+            var result = util.totalBuildFormList.call(this,this.comContainerList)
+            this.$axios.post('/api/jsonWrite',{data:result}).then(res=>{
+                alert(res)
+            }).catch(e=>{
+                throw e
+            })
         },
         cancel() {
             debugger

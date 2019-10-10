@@ -1,6 +1,13 @@
+<!--
+ * @Descripttion: 
+ * @version: 
+ * @Author: Colorssk
+ * @Date: 2019-09-20 14:42:24
+ * @LastEditors: Colorssk
+ * @LastEditTime: 2019-10-10 09:40:45
+ -->
 <template>
     <Table :columns="column1" :data="data1">
-    
     </Table>
     
     <Card style="width:80%; left: 10px;">
@@ -46,8 +53,8 @@
             </Row>
     
         </Form>
-    
     </Card>
+   
 </template>
 
 <script>
