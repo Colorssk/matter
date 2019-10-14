@@ -4,7 +4,7 @@
  * @Author: Colorssk
  * @Date: 2019-09-16 10:26:48
  * @LastEditors: Colorssk
- * @LastEditTime: 2019-10-09 11:30:43
+ * @LastEditTime: 2019-10-12 15:57:19
  -->
 <template>
     <Modal v-model="show" v-if="show" width='80%' :height="560" class="container">
@@ -17,7 +17,8 @@
                         </vue-draggable-resizable> -->
                 </div>
             </div>
-        </div> 
+        </div>
+        <!-- 右侧组件库 -->
         <div class="com-list">
             <ul class="com-ul-list-style">
                 <li class="ul-li-style" v-for="(part,index) in parts" :key="index">   
@@ -94,6 +95,24 @@
                     <div class="wait_logo_style" @click="addFormlist"></div>
                 </template>
             </Form>
+            <!-- table属性面板 -->
+            <template v-if="currentTableInfo">
+                <div style="width:248px;height:auto;border:1px dashed red; padding-top:20px;">
+                    <Row style="padding-bottom:20px;">
+                        <Col :span="11" >
+                            <Input ref="tableData" v-model="currentTableInfo.data" data-id="tableData" id="tableData" placeholder="table(Data)">
+                            </Input>
+                        </Col>
+                        <Col :span="11">
+                            <Input ref="tableColumn" v-model="currentTableInfo.column" data-id="tableColumn" id="tableColumn" placeholder="table(Column)">
+                            </Input>
+                        </Col>
+                        <Col :span="24">
+                           <Button class="ripple" style="margin-left:38%; margin-top:10px;" @click="saveTableInfo">ok</Button>
+                        </Col>
+                    </Row>
+                </div>
+            </template>
         </div>
         <Progress v-if="progressShow" :percent="percent" status="active" />
         <div slot="footer"><Button type="primary" @click="ok">确定</Button><Button>取消</Button></div>
@@ -109,6 +128,7 @@ export default {
     data() {
         return {
             show: true,
+            currentTableInfo: null,//属性面板中当前选中table值
             activeIndex: null,//forms列表中目前标红的id值
             comContainerList: [],//当前在画板上的所有元素
             progressShow: false,
@@ -129,6 +149,7 @@ export default {
                 label: '', //标签名
                 model: '', // 变量名
                 forms: [], //表单列表
+                tables: [], //table列表
             },
             computedPannelHight: 700,
             parts: [{
@@ -169,6 +190,7 @@ export default {
          $(document).on('click', (e) => {
             // 获取到目前点击的元素
             if(e.target.dataset.id){
+                // 选中小组件事件
                 this.pannelAction.forms.forEach((form,formIndex)=>{
                     if(form.children){
                         form.children.forEach((com,comIndex)=>{
@@ -178,9 +200,27 @@ export default {
                         })
                     }
                 })
+                // 选中table组件事件
+                if(this.pannelAction.tables.length>0){
+                    this.pannelAction.tables.forEach(el => {
+                        
+                        if(el.id == e.target.dataset.id){    
+                            this.currentTableInfo = {
+                                id: e.target.dataset.id,
+                                data: el.data,
+                                column: el.column
+                            }
+                        }
+                    });
+                }
             }else{
                 //移除forms中所有标红
                 this.activeIndex = null
+                if($(e.target).closest('div')[0].dataset.id != 'tableData'&& $(e.target).closest('div')[0].dataset.id != 'tableColumn'){
+                    this.currentTableInfo = null
+                }
+                //移除：table属性面板
+                //this.currentTableInfo = null
             }
          })
     },
@@ -196,6 +236,33 @@ export default {
         
     },
     methods: {
+        //存储table信息
+        saveTableInfo(){
+            this.pannelAction.tables.forEach((el,index) => {
+                if(el.id == this.currentTableInfo.id){
+                    let temp = this.pannelAction.tables
+                    temp[index].data = this.currentTableInfo.data
+                    temp[index].column = this.currentTableInfo.column
+                    this.$set(this.pannelAction,'tables',[].concat([...temp]))
+                }
+            });
+        },
+        // 添加组件的其余逻辑
+        /**
+         * @param
+         *  type: 添加组件类型,
+         *  id: 生成组件id
+         */
+        addComLogic(type,id){
+            if(type=='table'){
+                //先加入属性列表
+                this.pannelAction.tables.push({
+                    id:id,
+                    data: '',
+                    column: ''
+                })
+            }
+        },
         // 删除forms表单列表
         deleteForm(index){
             this.pannelAction.forms.splice(index,1);
@@ -257,7 +324,8 @@ export default {
             // 处理1：制定元素放入form
             // console.log(util.sortSCom.call(this,this.comContainerList),223)
             //console.log(util.buildFormList.call(this,this.comContainerList),223)
-            var result = util.totalBuildFormList.call(this,this.comContainerList)
+            var result = util.buildFormList.call(this,this.comContainerList)
+            console.log(result)
             this.$axios.post('/api/jsonWrite',{data:result}).then(res=>{
                 alert(res)
             }).catch(e=>{
@@ -279,7 +347,7 @@ export default {
                 })
 
                 if (filter.length == 0) {
-                    let temporaryId = this.genID()
+                    var temporaryId = this.genID()
                     createVueDragable($('.com-container')[0], { 'type': type,id:temporaryId,parent:this })
                     this.comContainerList.push({id:temporaryId,type:type,width:200,height:200,x:0,y:0})
                     this.nowType = ''
@@ -290,6 +358,8 @@ export default {
             } else {
                 this.$Message.info('有组件未添加属性')
             }
+            // 添加组件其余业务逻辑
+            this.addComLogic(type,temporaryId)
         }
     }
 }

@@ -4,7 +4,7 @@
  * @Author: sueRimn
  * @Date: 2019-09-26 15:29:21
  * @LastEditors: Colorssk
- * @LastEditTime: 2019-10-10 14:40:19
+ * @LastEditTime: 2019-10-11 17:25:41
  */
 import { SCom } from '../../type/whiteList.js'
 import  fs from 'fs';
@@ -134,6 +134,7 @@ export const util = {
         })
         return result
    },
+   //筛选出大组件(非form的组件)
    filterBCom(comList){
         let result =  []
         result = this._.filter(comList,(c)=>{
@@ -251,7 +252,25 @@ export const util = {
         // 初始数据的大组建集合
         //let tempTotalList = util.filterBCom.call(this,this.comContainerList.slice())
         console.log(this._.sortBy(this.comContainerList.slice()))
-        debugger
+        //大组件列表
+        var Blists = util.filterBCom.call(this,comList)
+        let BObj = {}
+        Blists.forEach(el=>{//大组件
+            comList.forEach(item=>{//所有组件
+                if(item.id!=el.id){//过滤到自身
+                    //所有组件中如果包含在BLists中的就直接生成对象数组
+                    //大组件阈值:x:(el.x,el.x+el.width);y:(el.y,el.y+el.height)
+                    //小组件阈值:x:(item.x,item.x+item.width);y:(item.y,item.y+item.height)
+                    if(item.x > el.x && item.x+item.width < el.x+el.width &&item.y > el.y && item.y+item.height < el.y+el.height){//组件包含在当前大组件的内部
+                        if(!BObj.hasOwnProperty(el.id)){//第一次塞
+                            BObj[el.id]  = []
+                        }
+                        BObj[el.id].push(item)
+                    }
+                }
+            })
+        })
+        //以上BObj: {id1:[B1组件，B2组件,A2组件]}
         //对初始数据排序处理（剔除小组件之后的其他组建集合）
         //this._.sortBy(tempTotalList,['y', 'x'])
         result = {root: SbuildData}
