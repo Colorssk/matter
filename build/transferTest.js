@@ -4,13 +4,13 @@
  * @Author: Colorssk
  * @Date: 2019-09-19 11:05:12
  * @LastEditors: Colorssk
- * @LastEditTime: 2019-09-19 11:05:12
+ * @LastEditTime: 2019-10-14 17:54:03
  */
 const fs = require('fs')
 const htmlModel = require('./htmlModel.js')
 const rule = require('./rule.js')
 var str = ''
-fs.readFile(__dirname + "/build1.json",'utf-8', function (err, data) {
+fs.readFile(__dirname + "/testFile.json",'utf-8', function (err, data) {
 
     if (err) { throw err; }
     //console.log(JSON.stringify(data.toString()));

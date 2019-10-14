@@ -1,1 +1,49 @@
-[]
+{
+	"root": [{
+		"id": "odbrle2qjr40000000",
+		"type": "card",
+		"attribute": {
+			"left": 20,
+			"width": 20
+		},
+		"children": [{
+			"id": "9lanl4e6spc0000000",
+			"type": "table",
+			"width": 360,
+			"height": 100,
+			"x": 80,
+			"y": 40
+		}, {
+			"model": "form1",
+			"children": [{
+				"type": "row",
+				"children": [{
+					"type": "input",
+					"label": "c",
+					"model": "c"
+				}]
+			}],
+			"type": "form"
+		}, {
+			"id": "feeiwkq4cgw0000000",
+			"type": "card",
+			"attribute": {
+				"left": 80,
+				"width": 280
+			},
+			"children": [{
+				"model": "form2",
+				"children": [{
+					"type": "row",
+					"children": [{
+						"type": "input",
+						"label": "d",
+						"model": "d"
+					}]
+				}],
+				"type": "form"
+			}],
+			"isAddFlag": true
+		}]
+	}]
+}

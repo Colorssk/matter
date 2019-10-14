@@ -3,6 +3,7 @@
         {
             "type": "form",
             "model": "form",
+            "id": "test1",
             "children": [
                 {
                     "type": "row",

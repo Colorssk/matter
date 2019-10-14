@@ -4,10 +4,10 @@
  * @Author: sueRimn
  * @Date: 2019-09-26 15:29:21
  * @LastEditors: Colorssk
- * @LastEditTime: 2019-10-11 17:25:41
+ * @LastEditTime: 2019-10-14 17:49:55
  */
-import { SCom } from '../../type/whiteList.js'
-import  fs from 'fs';
+import { SCom , attributesWhiteList, BCom } from '../../type/whiteList.js'
+import { Input } from 'iview';
 // import { compose } from '@/utils/util.js'
 const R = require('ramda');
 export const util = {
@@ -138,8 +138,8 @@ export const util = {
    filterBCom(comList){
         let result =  []
         result = this._.filter(comList,(c)=>{
-            return this._.find(SCom,function(o){
-                return o != c.type
+            return this._.find(BCom,function(o){
+                return o == c.type
             })
         })
         return result
@@ -251,17 +251,16 @@ export const util = {
         let SbuildData = util.buildFormList.call(this,comList)
         // 初始数据的大组建集合
         //let tempTotalList = util.filterBCom.call(this,this.comContainerList.slice())
-        console.log(this._.sortBy(this.comContainerList.slice()))
         //大组件列表
         var Blists = util.filterBCom.call(this,comList)
-        let BObj = {}
+        var BObj = {}
         Blists.forEach(el=>{//大组件
             comList.forEach(item=>{//所有组件
                 if(item.id!=el.id){//过滤到自身
                     //所有组件中如果包含在BLists中的就直接生成对象数组
                     //大组件阈值:x:(el.x,el.x+el.width);y:(el.y,el.y+el.height)
                     //小组件阈值:x:(item.x,item.x+item.width);y:(item.y,item.y+item.height)
-                    if(item.x > el.x && item.x+item.width < el.x+el.width &&item.y > el.y && item.y+item.height < el.y+el.height){//组件包含在当前大组件的内部
+                    if(Number(item.x) > Number(el.x) && Number(item.x) + Number(item.width) < Number(el.x)+ Number(el.width) && Number(item.y) > Number(el.y) && Number(item.y) + Number(item.height) < Number(el.y) + Number(el.height)){//组件包含在当前大组件的内部
                         if(!BObj.hasOwnProperty(el.id)){//第一次塞
                             BObj[el.id]  = []
                         }
@@ -270,13 +269,157 @@ export const util = {
                 }
             })
         })
-        //以上BObj: {id1:[B1组件，B2组件,A2组件]}
+        console.log(BObj,'第一阶段数据')
+        //以上BObj: {id1:[B1组件，B2组件,B3组件,A2组件]}
+        //第二部：
+        var BObj2 = []
+        //转化成:[{A1组件,children:[B1组件，B2组件,,B3组件,A2组件]}{A2组件，children:[B3组件]}]
+        Object.keys(BObj).forEach(key=>{
+            comList.forEach(item=>{
+                if(item.id == key){
+                    //包含attribute属性
+                    if(util.hasAttribute.call(this,item)){
+                        BObj2.push({
+                            "id":item.id,
+                            "type": item.type,
+                            "attribute": {
+                                "left": item.x,
+                                "width": item.y
+                            },
+                            "children": BObj[key].slice()
+                        })
+                        console.log(BObj[key].slice(),'为空的数据')
+                    }else{
+                        //一般类型   目前暂时只有两种大组件类型(card和table) colorssk
+                        BObj2.push({
+                            "id": item.id,
+                            "type": item.type,
+                            "data": "data1",
+                            "column": "column1"
+                        })
+                        console.log(item,'此处新增组件之后需要修改')
+                    }
+                    
+                    
+                }
+            })
+        })
+         //中转：删除冗余数据：例如二步骤的数据是[{A1组件,children:[B1组件，B2组件,B3组件，A2组件]}{A2组件，children:[B3组件]}]
+        //转化为: [{A1组件,children:[B1组件，B2组件，A2组件]}{A2组件，children:[B3组件]}]
+        var tempBObj2 = BObj2.slice()//临时数据
+        BObj2.forEach((el,index)=>{
+            if(el.children && el.children.length > 0){
+                el.children.forEach(item=>{
+                    if(this._.findIndex(BCom,o=>{
+                        return o == item.type
+                    }) > -1){//嵌套的对象是大组件
+                        var tempcurItem
+                        comList.forEach(com=>{
+                            if(com.id == item.id){
+                                tempcurItem = com
+                            }
+                        })
+                        var innerItem = []
+                        //查找大组件内部的子元素
+                        comList.forEach(com=>{//item,el(外层)=>(tempcurItem)(外层)，com(内层)
+                            if(Number(com.x) > Number(tempcurItem.x) && Number(com.x) + Number(com.width) < Number(tempcurItem.x)+ Number(tempcurItem.width) && Number(com.y) > Number(tempcurItem.y) && Number(com.y) + Number(com.height) < Number(tempcurItem.y) + Number(tempcurItem.height)){//在当前元素内部的子元素
+                                innerItem.push(com.id)
+                            }
+                        })
+                        //过滤children中重复组建例如B3组件
+                        tempBObj2[index].children.forEach((el,i)=>{
+                            if(this._.findIndex(innerItem,o=>{
+                                return o == el.id
+                            }) > -1){
+                                tempBObj2[index].children.splice(i, 1)
+                            }
+                        })
+                        
+                    }
+                })
+            }
+        })
+        BObj2 = tempBObj2
+        console.log(BObj2.slice(),'第二阶段数据')
+        //第三部所有小组件替换成序列化之后的form数据  SbuildData
+        // 转化成: [{A1组件,children:[form1对象，form1对象,A2组件]}{A2组件，children:[form2对象]}]
+        BObj2.forEach((el,i)=>{
+            if(Array.isArray(el.children) && el.children.length > 0){
+                el.children.forEach((child, index)=>{
+                    if(this._.findIndex(SCom,o=>{return o == child.type})>-1){//小组件
+                        BObj2[i].children[index] = util.getFormObj(child.model,SbuildData)
+                    }
+                })
+            }
+        })
+        console.log(BObj2,'第三阶段数据')
+        //第四部： 被嵌套的大组件置换展示具体置换内容   替换还是有bug
+        //转化成:[{A1组件,children:[form1对象,for1对象，form2对象]},{}]
+        for(var i = 0; i < BObj2.length; i++){
+            if(BObj2[i].children && BObj2[i].children.length>0){
+                BObj2[i].children.forEach((el,index)=>{
+                    if(i+1 < BObj2.length){//处理边界情况
+                        for(var j = i + 1;j< BObj2.length;j++){//此处可以取到最后一个元素
+                            if(this._.findIndex(BCom,o=>{return o == el.type}) > -1 &&BObj2[j].id == BObj2[i].children[index].id && BObj2[j].children){//大组件的情况
+                                //替换
+                                BObj2[i].children[index] = BObj2[j]
+                                //数组降维
+                                //BObj2[i].children = Array.prototype.concat.apply([],BObj2[i].children)
+                                //需要置空的大组建标记
+                                BObj2[j].isAddFlag = true
+                            }
+                        }
+                    }
+                })
+            }
+        }
+        console.log(BObj2,'第四阶段数据')
+        //第五步：
+        //转化成 [{A1组件,children:[form1对象,for1对象，form2对象]}]
+        BObj2.forEach((el,index)=>{
+            if(el.isAddFlag){
+                
+                BObj2.splice(index,1)   
+            }
+        })
+        console.log(BObj2,'第五阶段数据')
         //对初始数据排序处理（剔除小组件之后的其他组建集合）
         //this._.sortBy(tempTotalList,['y', 'x'])
-        result = {root: SbuildData}
+        result = {root: BObj2}
         return result
    },
-   
+   //判断是否包含attribute属性
+   hasAttribute(item){
+       let index =  this._.findIndex(attributesWhiteList, o=>{return o == item.type});
+       if(index == -1){
+           return false
+       }else{
+           return true
+       }
+   },
+   // 返回包含某组件的form对象
+   /**
+    * 
+    * @param {String} model :小组件model
+    * @param {Array} formsList ： 序列化之后的forms数组
+    */
+   getFormObj(model,formsList){
+    var result = {}
+    formsList.forEach(form=>{
+        if(form.children.length>0){
+            form.children.forEach(row=>{
+                if(row.children.length>0){
+                    row.children.forEach(col=>{
+                        if(col.model==model){
+                            result = form
+                        }
+                    })
+                }
+            })
+        }
+    })
+    return result
+   }
 
    
 }

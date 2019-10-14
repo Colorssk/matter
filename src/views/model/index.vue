@@ -4,7 +4,7 @@
  * @Author: Colorssk
  * @Date: 2019-09-16 10:26:48
  * @LastEditors: Colorssk
- * @LastEditTime: 2019-10-12 15:57:19
+ * @LastEditTime: 2019-10-14 14:09:38
  -->
 <template>
     <Modal v-model="show" v-if="show" width='80%' :height="560" class="container">
@@ -310,22 +310,23 @@ export default {
             
         },
         ok() {
-            this.progressShow = true
+            //this.progressShow = true
             // 获取数据
-            console.log(this.comContainerList,123)
-            this.timer = setInterval(()=>{
-                this.$nextTick(()=>{
-                    this.percent += 5
-                })
+            // console.log(this.comContainerList,123)
+            // this.timer = setInterval(()=>{
+            //     this.$nextTick(()=>{
+            //         this.percent += 5
+            //     })
                 
-            },100);
+            // },100);
             //
             // var result = [];//最终一期处理之后的数据
             // 处理1：制定元素放入form
             // console.log(util.sortSCom.call(this,this.comContainerList),223)
             //console.log(util.buildFormList.call(this,this.comContainerList),223)
-            var result = util.buildFormList.call(this,this.comContainerList)
-            console.log(result)
+            // var result = util.buildFormList.call(this,this.comContainerList)
+            var result = util.totalBuildFormList.call(this,this.comContainerList)
+            console.log(result,233)
             this.$axios.post('/api/jsonWrite',{data:result}).then(res=>{
                 alert(res)
             }).catch(e=>{
