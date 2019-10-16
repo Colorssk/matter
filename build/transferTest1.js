@@ -81,5 +81,5 @@ var insetSign = (elData,length,flag=false) => {
 var getJs = (data) => {
     
 }
-trans()
+// trans()
 module.exports = trans

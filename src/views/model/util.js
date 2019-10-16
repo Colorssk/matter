@@ -4,7 +4,7 @@
  * @Author: sueRimn
  * @Date: 2019-09-26 15:29:21
  * @LastEditors: Colorssk
- * @LastEditTime: 2019-10-14 17:49:55
+ * @LastEditTime: 2019-10-16 17:24:33
  */
 import { SCom , attributesWhiteList, BCom } from '../../type/whiteList.js'
 import { Input } from 'iview';
@@ -270,7 +270,7 @@ export const util = {
             })
         })
         console.log(BObj,'第一阶段数据')
-        //以上BObj: {id1:[B1组件，B2组件,B3组件,A2组件]}
+        //以上BObj: {id1:[B1组件，B2组件,B3组件,A2组件],id2(A2组件):[B3组件]}
         //第二部：
         var BObj2 = []
         //转化成:[{A1组件,children:[B1组件，B2组件,,B3组件,A2组件]}{A2组件，children:[B3组件]}]
@@ -420,6 +420,6 @@ export const util = {
     })
     return result
    }
-
+   
    
 }

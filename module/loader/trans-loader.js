@@ -4,7 +4,7 @@
  * @Author: Colorssk
  * @Date: 2019-10-15 13:57:13
  * @LastEditors: Colorssk
- * @LastEditTime: 2019-10-15 18:02:21
+ * @LastEditTime: 2019-10-16 17:22:25
  */
 let loaderUtils = require('loader-utils')
 let validateOptions = require('schema-utils')
@@ -32,20 +32,24 @@ function loader(source){
         //     //读取到数据之后，进行转码：
         //     trans
         // })
-        let result = trans(options.filename)//序列化之后的数据操作
-        fs.writeFile('./store.txt', JSON.stringify(result), function(err) {//此处的文件名需要可配置
-            if (err) {
-                console.log(err)
-                throw err;
-                
-            }
-            return source
-        })
-    
+        console.log(options.filename,'22222222222222222222222222')
+        var fnHtml = data=>{
+            fs.writeFile('./store.vue',data,{encoding:'utf8'}, (err)=>{//此处的文件名需要可配置
+                if (err) {
+                    
+                    throw err;
+                    
+                }
+               cb(null,source)
+            })   
+        }
+        trans(options.filename,fnHtml)//序列化之后的数据操作
+        
+        
     }else{
         //cb也是一个异步所以可以并列调用
         // cb(null,`/**${options.text}**/${source}`)
-        return source
+        cb(null,source)
     }
     // cb(null,source)
     return source

@@ -4,23 +4,34 @@
  * @Author: Colorssk
  * @Date: 2019-09-19 11:05:12
  * @LastEditors: Colorssk
- * @LastEditTime: 2019-10-15 14:40:16
+ * @LastEditTime: 2019-10-16 17:22:08
  */
 const fs = require('fs')
 const htmlModel = require('./htmlModel.js')
 const rule = require('./rule.js')
 var str = ''
-var trans = (filName)=>{
-    fs.readFile(__dirname + "/"+filName,'utf-8', function (err, data) {
-
-        if (err) { throw err; }
+//过滤文本中的特殊字符
+var filterSign = (st)=>{
+    st = st.replace(/(\\|\\r|\\n|\\r\\n)/ig,'')
+    return st
+}
+/**
+ * 
+ * @param {*} fileName 
+ * @param {*} 回掉执行文件的压入 
+ */
+var trans = (fileName,fn)=>{
+    fs.readFile(__dirname + "/"+fileName,'utf-8', (err, data) => {
+        
+        if (err) { console.log('报错了---------------'); throw err; }
         //console.log(JSON.stringify(data.toString()));
         let fileData = JSON.parse(data.toString())
-     
+        
         let rootData = JSON.parse(JSON.stringify(fileData.root))
         getHtml(rootData)
         getJs(rootData)
-        return str
+        str = filterSign('<template><div>'+String(str)+'</div></template>')
+        fn(str)
     });
 }
 
@@ -79,4 +90,6 @@ var getJs = (data) => {
     
 }
 // trans()
+var tempdata = filterSign('Card style=\ "width:20; left: 20;\">\r\n')
+console.log(tempdata)
 module.exports = trans
