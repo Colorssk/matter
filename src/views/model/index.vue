@@ -4,7 +4,7 @@
  * @Author: Colorssk
  * @Date: 2019-09-16 10:26:48
  * @LastEditors: Colorssk
- * @LastEditTime: 2019-10-14 14:09:38
+ * @LastEditTime: 2019-10-15 11:08:17
  -->
 <template>
     <Modal v-model="show" v-if="show" width='80%' :height="560" class="container">
@@ -325,13 +325,29 @@ export default {
             // console.log(util.sortSCom.call(this,this.comContainerList),223)
             //console.log(util.buildFormList.call(this,this.comContainerList),223)
             // var result = util.buildFormList.call(this,this.comContainerList)
-            var result = util.totalBuildFormList.call(this,this.comContainerList)
+            // 另加的table属性(data,column)//this.pannelAction.tables
+            var tempOption = this._.cloneDeep(this.addAttr(this.comContainerList))
+            var result = util.totalBuildFormList.call(this,tempOption)
             console.log(result,233)
             this.$axios.post('/api/jsonWrite',{data:result}).then(res=>{
                 alert(res)
             }).catch(e=>{
                 throw e
             })
+        },
+        addAttr(data){
+            let cloneData = this._.cloneDeep(data)
+            if(this.pannelAction.tables.length > 0){
+                this.pannelAction.tables.forEach(el=>{
+                    cloneData.forEach((item,index)=>{
+                        if(el.id == item.id){
+                            cloneData[index].data = el.data;
+                            cloneData[index].column = el.column;
+                        }
+                    })
+                })
+            }
+            return cloneData
         },
         cancel() {
             debugger

@@ -4,7 +4,7 @@
  * @Author: Colorssk
  * @Date: 2019-09-06 18:02:20
  * @LastEditors: Colorssk
- * @LastEditTime: 2019-10-09 09:36:34
+ * @LastEditTime: 2019-10-15 17:54:40
  */
 'use strict'
 var webpack = require('webpack')
@@ -23,7 +23,7 @@ const name = defaultSettings.title || 'vue Admin Template' // page title
 // You can change the port by the following methods:
 // port = 9528 npm run dev OR npm run dev --port = 9528
 const port = process.env.port || process.env.npm_config_port || 9528 // dev port
-
+console.log(path.resolve(__dirname,'./module/loader','trans-loader.js'))
 // All configuration item explanations can be find in https://cli.vuejs.org/config/
 module.exports = {
   /**
@@ -81,6 +81,14 @@ module.exports = {
           jQuery: "jquery"
       })
   ],
+  resolveLoader:{
+      alias:{
+            'trans':path.resolve(__dirname,'./module/loader','trans-loader.js')
+      },
+      modules: [ './module/loader','node_modules' ],
+      extensions: [ '.js', '.json' ],
+      mainFields: [ 'loader', 'main']
+    }
   },
   chainWebpack(config) {
     config.plugins.delete('preload') // TODO: need test
@@ -113,6 +121,19 @@ module.exports = {
         return options
       })
       .end()
+    //新增自定义属性:
+    config.module
+    .rule('trans')
+    .test(/\.json$/)
+    .include.add(resolve('module/loader'))
+    .end()
+    .use('trans')
+    .loader('trans')
+    .options({
+      filename: 'testFile.json' 
+    })
+    .end()
+
 
     config
       // https://webpack.js.org/configuration/devtool/#development
