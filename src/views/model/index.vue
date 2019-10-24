@@ -4,7 +4,7 @@
  * @Author: Colorssk
  * @Date: 2019-09-16 10:26:48
  * @LastEditors: Colorssk
- * @LastEditTime: 2019-10-15 11:08:17
+ * @LastEditTime: 2019-10-23 17:03:18
  -->
 <template>
     <Modal v-model="show" v-if="show" width='80%' :height="560" class="container">
@@ -310,6 +310,18 @@ export default {
             
         },
         ok() {
+            //测试用:
+            // this.$axios.get('/api/getTestjson').then(res=>{
+            //     // alert(res)
+            //     // res.data.pop()
+            //     var result = util.totalBuildFormList.call(this,res.data)
+            //     console.log(result)
+            // }).catch(e=>{
+            //     throw e
+            // })
+
+
+
             //this.progressShow = true
             // 获取数据
             // console.log(this.comContainerList,123)
@@ -327,13 +339,33 @@ export default {
             // var result = util.buildFormList.call(this,this.comContainerList)
             // 另加的table属性(data,column)//this.pannelAction.tables
             var tempOption = this._.cloneDeep(this.addAttr(this.comContainerList))
+            // tempOption.push({
+            //     id: '0',
+            //     type:'card',
+            //     x: 0,
+            //     y: 0,
+            //     width: 1000,
+            //     height: 1000
+            // })
+            // this.$axios.post('/api/testHtmljsonWrite',{data:tempOption}).then(res=>{
+            //     // alert(res)
+            // }).catch(e=>{
+            //     throw e
+            // })
             var result = util.totalBuildFormList.call(this,tempOption)
-            console.log(result,233)
-            this.$axios.post('/api/jsonWrite',{data:result}).then(res=>{
-                alert(res)
-            }).catch(e=>{
-                throw e
-            })
+            let temproot = this._.cloneDeep(result.root)
+            console.log('分界线')
+            // console.log(util.getJSLists.call(this,temproot))
+            console.log(temproot,'123')
+          
+            
+
+
+            // this.$axios.post('/api/jsonWrite',{data:result}).then(res=>{
+            //     alert(res)
+            // }).catch(e=>{
+            //     throw e
+            // })
         },
         addAttr(data){
             let cloneData = this._.cloneDeep(data)

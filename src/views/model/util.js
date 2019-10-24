@@ -4,12 +4,13 @@
  * @Author: sueRimn
  * @Date: 2019-09-26 15:29:21
  * @LastEditors: Colorssk
- * @LastEditTime: 2019-10-16 17:24:33
+ * @LastEditTime: 2019-10-24 17:19:46
  */
 import { SCom , attributesWhiteList, BCom } from '../../type/whiteList.js'
 import { Input } from 'iview';
 // import { compose } from '@/utils/util.js'
 const R = require('ramda');
+var result = {form:{},table:[],select:[]}
 export const util = {
     //处理一期数据:　加入表单：
     /*
@@ -244,7 +245,7 @@ export const util = {
     })
     return filterSComFromForm
    },
-   // 把小组件和大组件一起整合
+   // 把小组件和大组件一起整合  bug 第一步：大组件和小组件为并列(漏删选)
    totalBuildFormList(comList){
         var result
         //处理过之后小组件集合
@@ -284,7 +285,7 @@ export const util = {
                             "type": item.type,
                             "attribute": {
                                 "left": item.x,
-                                "width": item.y
+                                "top": item.y
                             },
                             "children": BObj[key].slice()
                         })
@@ -377,11 +378,34 @@ export const util = {
         //第五步：
         //转化成 [{A1组件,children:[form1对象,for1对象，form2对象]}]
         BObj2.forEach((el,index)=>{
-            if(el.isAddFlag){
-                
+            if(el.isAddFlag){   
                 BObj2.splice(index,1)   
             }
         })
+        //此处去重不干净:
+        console.log('去重之前')
+        console.log(this._.cloneDeep(BObj2))
+        debugger
+        let tempClearData = this._.cloneDeep(BObj2)
+        tempClearData.forEach((el,index,self)=>{
+            if(el.type == 'form'){
+                util.clearFormData.call(this,tempClearData)
+            }
+            if(tempClearData[index].children && tempClearData[index].children.length > 0){
+                debugger
+                tempClearData[index].children.forEach((_,ind)=>{
+                    if(tempClearData[index].children[ind] && tempClearData[index].children[ind].type && tempClearData[index].children[ind].type == 'form'){
+                        debugger
+                        tempClearData[index].children = util.clearFormData.call(this,tempClearData[index].children)
+                    }
+                })
+            }
+        })
+        BObj2 = tempClearData
+        //util.clearMUli.call(this,BObj2)
+        console.log('去重之后')
+        console.log(BObj2)
+
         console.log(BObj2,'第五阶段数据')
         //对初始数据排序处理（剔除小组件之后的其他组建集合）
         //this._.sortBy(tempTotalList,['y', 'x'])
@@ -419,7 +443,74 @@ export const util = {
         }
     })
     return result
+   },
+   // 获取js序列化数据
+   /**
+    * 
+    * @param {Array} root: html序列化之后的数据.root 
+    */
+   getJSLists(root){
+       debugger
+        //slelect 存储options数组
+        root.forEach(el=>{
+            if(el.type!='form'){
+                switch(el.type){
+                    case 'table':
+                        Array.prototype.push.call(result.table,...[el.data,el.column]);
+                        break;
+                    case 'select':
+                        Array.prototype.push.call(result.select,...[el.model]);
+                        break;
+                }
+                if(el.children && el.children.length>0){
+                    util.getJSLists.call(this,el.children)
+                }
+            }else{
+                //如果类型是form就把数据一次性加载进去
+                if(!result.form[el.model]){
+                    result.form[el.model] = []
+                }
+                el.children.forEach(row => {
+                    row.children.forEach(col=>{
+                        result.form[el.model].push(col.model)
+                    })
+                });
+            }
+            
+        })
+        return result
+   },
+   clearMUli(data,ind){
+       data.forEach((_,index)=>{
+        if(data[index].children&&data[index].children.length>0){
+            if(this._.findIndex(data,o=>{
+                return o.type=='form'
+            })>-1){
+                // clear data
+                debugger
+                util.clearFormData.call(this,data,ind)
+            }else{
+                console.log(this._.findIndex(data,o=>{
+                    debugger
+                    return o.type=='form'
+                }))
+                debugger
+                util.clearMUli.call(this,data,index)
+            }
+           }
+       })
+       debugger
+   },
+   clearFormData(data){
+
+       if(Array.isArray(data)){
+        var obj = {};
+            data = data.reduce(function(item, next) {
+            obj[next.model] ? '' : obj[next.model] = true && item.push(next);
+            return item;
+        }, []);
+       }
+       debugger
+       return data
    }
-   
-   
 }

@@ -1,1 +1,1 @@
-{"root":[{"id":"ego4w6b68a80000000","type":"card","attribute":{"left":20,"width":20},"children":[{"id":"68kdivmfbok0000000","type":"table","width":200,"height":80,"x":40,"y":40,"data":"a","column":"b"},{"model":"form1","children":[{"type":"row","children":[{"type":"input","label":"c","model":"c"}]}],"type":"form"},{"id":"bxwl6nkqrm00000000","type":"card","attribute":{"left":60,"width":240},"children":[{"model":"form2","children":[{"type":"row","children":[{"type":"input","label":"d","model":"d"}]}],"type":"form"}],"isAddFlag":true}]}]}
+9
