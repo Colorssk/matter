@@ -4,7 +4,7 @@
  * @Author: sueRimn
  * @Date: 2019-09-26 15:29:21
  * @LastEditors: Colorssk
- * @LastEditTime: 2019-10-24 17:19:46
+ * @LastEditTime: 2019-10-25 15:22:48
  */
 import { SCom , attributesWhiteList, BCom } from '../../type/whiteList.js'
 import { Input } from 'iview';
@@ -386,23 +386,25 @@ export const util = {
         console.log('去重之前')
         console.log(this._.cloneDeep(BObj2))
         debugger
-        let tempClearData = this._.cloneDeep(BObj2)
-        tempClearData.forEach((el,index,self)=>{
-            if(el.type == 'form'){
-                util.clearFormData.call(this,tempClearData)
-            }
-            if(tempClearData[index].children && tempClearData[index].children.length > 0){
-                debugger
-                tempClearData[index].children.forEach((_,ind)=>{
-                    if(tempClearData[index].children[ind] && tempClearData[index].children[ind].type && tempClearData[index].children[ind].type == 'form'){
-                        debugger
-                        tempClearData[index].children = util.clearFormData.call(this,tempClearData[index].children)
-                    }
-                })
-            }
-        })
-        BObj2 = tempClearData
-        //util.clearMUli.call(this,BObj2)
+        // let tempClearData = this._.cloneDeep(BObj2)
+        // tempClearData.forEach((el,index,self)=>{
+        //     if(el.type == 'form'){
+        //         util.clearFormData.call(this,tempClearData)
+        //     }
+        //     if(tempClearData[index].children && tempClearData[index].children.length > 0){
+        //         debugger
+        //         tempClearData[index].children.forEach((_,ind)=>{
+        //             if(tempClearData[index].children[ind] && tempClearData[index].children[ind].type && tempClearData[index].children[ind].type == 'form'){
+        //                 debugger
+        //                 tempClearData[index].children = util.clearFormData.call(this,tempClearData[index].children)
+        //             }
+        //         })
+        //     }
+        // })
+        // BObj2 = tempClearData
+
+        util.clearMUli.call(this,BObj2)
+        
         console.log('去重之后')
         console.log(BObj2)
 
@@ -480,37 +482,20 @@ export const util = {
         })
         return result
    },
-   clearMUli(data,ind){
-       data.forEach((_,index)=>{
-        if(data[index].children&&data[index].children.length>0){
-            if(this._.findIndex(data,o=>{
-                return o.type=='form'
-            })>-1){
-                // clear data
-                debugger
-                util.clearFormData.call(this,data,ind)
-            }else{
-                console.log(this._.findIndex(data,o=>{
-                    debugger
-                    return o.type=='form'
-                }))
-                debugger
-                util.clearMUli.call(this,data,index)
-            }
-           }
-       })
-       debugger
-   },
-   clearFormData(data){
-
-       if(Array.isArray(data)){
-        var obj = {};
-            data = data.reduce(function(item, next) {
-            obj[next.model] ? '' : obj[next.model] = true && item.push(next);
-            return item;
-        }, []);
-       }
-       debugger
-       return data
-   }
+   clearMUli(data){
+    var res = {}
+    //如果包含form再去重
+    if(data.findIndex((o)=>{
+       return o.type == 'form'
+    })> -1){
+        data = data.filter(item=>!res[item.model] && (res[item.model] = true))
+    }
+    // 遍历递归
+    return data.map(item=>{
+        if(item.children && item.children.length > 0){
+            item.children = util.clearMUli(item.children) // 局部赋值保持对应关系
+        }
+        return item
+    })
+    }
 }
