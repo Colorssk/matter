@@ -4,7 +4,7 @@
  * @Author: Colorssk
  * @Date: 2019-09-06 18:02:20
  * @LastEditors: Colorssk
- * @LastEditTime: 2019-10-15 17:54:40
+ * @LastEditTime: 2019-10-29 17:22:08
  */
 'use strict'
 var webpack = require('webpack')
@@ -40,6 +40,7 @@ module.exports = {
   productionSourceMap: false,
   devServer: {
     port: port,
+    hot: true,
     open: true,
     overlay: {
       warnings: false,
@@ -130,7 +131,8 @@ module.exports = {
     .use('trans')
     .loader('trans')
     .options({
-      filename: 'testFile.json' 
+      filename: 'fortestHtmlFile.json',
+      fileJSname: 'fortestJSFile.json' 
     })
     .end()
 

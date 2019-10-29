@@ -4,10 +4,11 @@
  * @Author: Colorssk
  * @Date: 2019-09-19 11:05:12
  * @LastEditors: Colorssk
- * @LastEditTime: 2019-10-16 17:22:08
+ * @LastEditTime: 2019-10-29 17:51:11
  */
 const fs = require('fs')
 const htmlModel = require('./htmlModel.js')
+const jsModel = require('./jsModel.js')
 const rule = require('./rule.js')
 var str = ''
 //过滤文本中的特殊字符
@@ -29,12 +30,11 @@ var trans = (fileName,fn)=>{
         
         let rootData = JSON.parse(JSON.stringify(fileData.root))
         getHtml(rootData)
-        getJs(rootData)
+        //getJs(rootData)
         str = filterSign('<template><div>'+String(str)+'</div></template>')
         fn(str)
     });
 }
-
 var getHtml = (data) => {
     let tempData
     data.forEach(el => {
@@ -86,10 +86,49 @@ var insetSign = (elData,length,flag=false) => {
     
     return result
 }
-var getJs = (data) => {
-    
+// loader处理js代码
+var transJs = (JSFileName,fn) => {
+    console.log('1233333333333333333333333333333333')
+    fs.readFile(__dirname + "/"+JSFileName,'utf-8', (err, data) => {
+        
+        if (err) { console.log('报错了---------------'); throw err; }
+        //console.log(JSON.stringify(data.toString()));
+        let fileData = JSON.parse(data.toString())
+        // {"form":{"form1":["q","w"],"form2":["e","r"]},"table":["a","b"],"select":[]}
+        let forms  = JSON.parse(JSON.stringify(fileData.form))
+        let table = JSON.parse(JSON.stringify(fileData.table))
+        let select = JSON.parse(JSON.stringify(fileData.select))
+        
+        var formStr = ''
+        Object.keys(forms).forEach(key=>{
+            formStr += key + ':{' 
+            var tempdata = ''
+            forms[key].forEach(el=>{
+                tempdata += el + ':null,'    
+            })
+            formStr += tempdata + '}'
+        })
+
+        var tableStr = ''
+        table.forEach((el,index)=>{
+            if(index % 2==0){
+                tableStr += el + ': [],' + table[index+1] + ':[],'
+            }
+        })
+
+        var selectStr = ''
+        select.forEach(el => {
+            selectStr += el + 's:null,'
+        });
+        var totalStr = formStr + tableStr + selectStr
+        fn(totalStr)
+    });
 }
 // trans()
 var tempdata = filterSign('Card style=\ "width:20; left: 20;\">\r\n')
 console.log(tempdata)
-module.exports = trans
+var util = {
+    trans,
+    transJs
+}
+module.exports = util

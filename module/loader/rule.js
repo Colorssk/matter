@@ -1,3 +1,11 @@
+/*
+ * @Descripttion: 
+ * @version: 
+ * @Author: Colorssk
+ * @Date: 2019-10-15 14:07:03
+ * @LastEditors: Colorssk
+ * @LastEditTime: 2019-10-29 17:54:20
+ */
 const rule = {
     "table": (str,param) => {
         // "table": '<Table :columns="$column" :data="$data"></Table>'
@@ -18,7 +26,7 @@ const rule = {
     },
     "card": (str,param) => {
         // <Card style="width:$width; left: $left;"></Card>
-        str = str.replace('$width',param.attribute.width).replace('$left',param.attribute.left);
+        str = str.replace('$top',param.attribute.top).replace('$left',param.attribute.left);
         return str
     },
     "row": (str) => {

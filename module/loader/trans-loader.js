@@ -4,12 +4,12 @@
  * @Author: Colorssk
  * @Date: 2019-10-15 13:57:13
  * @LastEditors: Colorssk
- * @LastEditTime: 2019-10-16 17:22:25
+ * @LastEditTime: 2019-10-29 17:56:13
  */
 let loaderUtils = require('loader-utils')
 let validateOptions = require('schema-utils')
 let fs = require('fs')
-let trans = require('./transferTest')
+let util = require('./transferTest')
 function loader(source){
     this.cacheable(false)//打包的时候关掉缓存，表示每次都会重新打包
     //this.cacheable && this.cacheable()// 不穿参数表示默认打包
@@ -32,7 +32,6 @@ function loader(source){
         //     //读取到数据之后，进行转码：
         //     trans
         // })
-        console.log(options.filename,'22222222222222222222222222')
         var fnHtml = data=>{
             fs.writeFile('./store.vue',data,{encoding:'utf8'}, (err)=>{//此处的文件名需要可配置
                 if (err) {
@@ -40,11 +39,19 @@ function loader(source){
                     throw err;
                     
                 }
-               cb(null,source)
             })   
         }
-        trans(options.filename,fnHtml)//序列化之后的数据操作
-        
+        var fnJs = data => {
+            fs.writeFile('./store2.vue',data,{encoding:'utf8',flag: 'a'}, (err)=>{//此处的文件名需要可配置
+                if (err) {
+                    console.log('写入失败------------------------------------')
+                    throw err;
+                    
+                }
+               cb(null,source)
+            })
+        }
+        util.trans(options.filename,fnHtml,util.transJs(options.fileJSname,fnJs))//序列化之后的数据操作
         
     }else{
         //cb也是一个异步所以可以并列调用

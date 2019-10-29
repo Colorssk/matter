@@ -4,7 +4,7 @@
  * @Author: Colorssk
  * @Date: 2019-10-08 15:37:46
  * @LastEditors: Colorssk
- * @LastEditTime: 2019-10-18 11:42:53
+ * @LastEditTime: 2019-10-29 14:54:54
  */
 var express = require('express');
 var app = express();
@@ -23,13 +23,44 @@ app.use(function(req, res, next) {
 var router = express.Router();
 
 
-app.post('/jsonWrite', function(req, res, next) {
+// app.post('/jsonWrite', function(req, res, next) {
 
+//   // 获取参数
+//   var query = req.body;
+//   console.log("post请求：参数", JSON.stringify(query));
+//   data = JSON.stringify(query.data)
+//   const dirName = path.join(__dirname, '../','./build/testFile.json')
+//   fs.writeFile(dirName, data, function(err) {
+//       if (err) {
+//           throw err;
+//       }
+//       res.send('hello , world');
+//   });
+// });
+
+// app.get('/getTestjson', function(req, res, next) {
+
+//   // 获取参数
+//   var query = req.body;
+//   console.log("post请求：参数", JSON.stringify(query));
+//   data = JSON.stringify(query.data)
+//   const dirName = path.join(__dirname, '../','./build/fortestHtmlFile.json')
+//   fs.readFile(dirName,'utf-8', function (err, data) {
+
+//       if (err) { throw err; }
+//       res.send(JSON.parse(data));
+      
+    
+
+//   });
+// });
+// html模板写入
+app.post('/testHtmljsonWrite', function(req, res, next) {
   // 获取参数
   var query = req.body;
   console.log("post请求：参数", JSON.stringify(query));
   data = JSON.stringify(query.data)
-  const dirName = path.join(__dirname, '../','./build/testFile.json')
+  const dirName = path.join(__dirname, '../','./module/loader/fortestHtmlFile.json')
   fs.writeFile(dirName, data, function(err) {
       if (err) {
           throw err;
@@ -37,30 +68,13 @@ app.post('/jsonWrite', function(req, res, next) {
       res.send('hello , world');
   });
 });
-
-app.get('/getTestjson', function(req, res, next) {
-
+// js模板写入
+app.post('/testJSjsonWrite', function(req, res, next) {
   // 获取参数
   var query = req.body;
   console.log("post请求：参数", JSON.stringify(query));
   data = JSON.stringify(query.data)
-  const dirName = path.join(__dirname, '../','./build/fortestHtmlFile.json')
-  fs.readFile(dirName,'utf-8', function (err, data) {
-
-      if (err) { throw err; }
-      res.send(JSON.parse(data));
-      
-    
-
-  });
-});
-app.post('/testHtmljsonWrite', function(req, res, next) {
-console.log('222222222222222222')
-  // 获取参数
-  var query = req.body;
-  console.log("post请求：参数", JSON.stringify(query));
-  data = JSON.stringify(query.data)
-  const dirName = path.join(__dirname, '../','./build/fortestHtmlFile.json')
+  const dirName = path.join(__dirname, '../','./module/loader/fortestJSFile.json')
   fs.writeFile(dirName, data, function(err) {
       if (err) {
           throw err;

@@ -4,7 +4,7 @@
  * @Author: Colorssk
  * @Date: 2019-09-16 10:26:48
  * @LastEditors: Colorssk
- * @LastEditTime: 2019-10-23 17:03:18
+ * @LastEditTime: 2019-10-29 15:54:40
  -->
 <template>
     <Modal v-model="show" v-if="show" width='80%' :height="560" class="container">
@@ -355,17 +355,20 @@ export default {
             var result = util.totalBuildFormList.call(this,tempOption)
             let temproot = this._.cloneDeep(result.root)
             console.log('分界线')
-            // console.log(util.getJSLists.call(this,temproot))
+            var jsResult = util.getJSLists.call(this,temproot)
             console.log(temproot,'123')
-          
-            
 
+            this.$axios.post('/api/testHtmljsonWrite',{data:result}).then(res=>{
+                //alert(res)
+            }).catch(e=>{
+                throw e
+            })
 
-            // this.$axios.post('/api/jsonWrite',{data:result}).then(res=>{
-            //     alert(res)
-            // }).catch(e=>{
-            //     throw e
-            // })
+            this.$axios.post('/api//testJSjsonWrite',{data:jsResult}).then(res=>{
+                //alert(res)
+            }).catch(e=>{
+                throw e
+            })
         },
         addAttr(data){
             let cloneData = this._.cloneDeep(data)

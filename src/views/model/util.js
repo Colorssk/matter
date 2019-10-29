@@ -4,7 +4,7 @@
  * @Author: sueRimn
  * @Date: 2019-09-26 15:29:21
  * @LastEditors: Colorssk
- * @LastEditTime: 2019-10-25 15:22:48
+ * @LastEditTime: 2019-10-29 16:10:27
  */
 import { SCom , attributesWhiteList, BCom } from '../../type/whiteList.js'
 import { Input } from 'iview';
@@ -385,7 +385,6 @@ export const util = {
         //此处去重不干净:
         console.log('去重之前')
         console.log(this._.cloneDeep(BObj2))
-        debugger
         // let tempClearData = this._.cloneDeep(BObj2)
         // tempClearData.forEach((el,index,self)=>{
         //     if(el.type == 'form'){
@@ -452,7 +451,6 @@ export const util = {
     * @param {Array} root: html序列化之后的数据.root 
     */
    getJSLists(root){
-       debugger
         //slelect 存储options数组
         root.forEach(el=>{
             if(el.type!='form'){
@@ -460,7 +458,7 @@ export const util = {
                     case 'table':
                         Array.prototype.push.call(result.table,...[el.data,el.column]);
                         break;
-                    case 'select':
+                    case 'select':// 此处特殊的需要加上
                         Array.prototype.push.call(result.select,...[el.model]);
                         break;
                 }
@@ -475,6 +473,8 @@ export const util = {
                 el.children.forEach(row => {
                     row.children.forEach(col=>{
                         result.form[el.model].push(col.model)
+                        let temp  = { 'select': col.model}[col.type] || null
+                        if(temp) result.select.push(temp) 
                     })
                 });
             }
