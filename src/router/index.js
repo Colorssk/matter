@@ -1,5 +1,15 @@
+/*
+ * @Descripttion: 
+ * @version: 
+ * @Author: Colorssk
+ * @Date: 2019-09-06 18:02:20
+ * @LastEditors: Colorssk
+ * @LastEditTime: 2019-10-30 16:41:27
+ */
 import Vue from 'vue'
 import Router from 'vue-router'
+
+import axios from 'axios';
 
 Vue.use(Router)
 
@@ -162,7 +172,16 @@ export const constantRoutes = [
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
-
+console.log('-----------------------------------router--------------')
+console.log(process.argv)
+console.log(process.env.npm_config_argv)
+axios.get('/api/getProcessArg').then(res=>{
+  //alert(res)
+  console.log(res)
+  debugger
+}).catch(e=>{
+  throw e
+})
 const createRouter = () => new Router({
   // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),

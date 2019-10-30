@@ -4,7 +4,7 @@
  * @Author: Colorssk
  * @Date: 2019-10-08 15:37:46
  * @LastEditors: Colorssk
- * @LastEditTime: 2019-10-29 14:54:54
+ * @LastEditTime: 2019-10-30 16:25:38
  */
 var express = require('express');
 var app = express();
@@ -82,7 +82,14 @@ app.post('/testJSjsonWrite', function(req, res, next) {
       res.send('hello , world');
   });
 });
+// 命令行参数获取
+app.get('/getProcessArg', function(req, res, next) {
 
+  // 获取参数
+  var query = process.argv[(process.argv.length-1)]
+  console.log(query,'-------------------------------------')
+  res.send(query)
+});
 const HOST = 'localhost'
 const PORT = 3000
 // http.createServer(app).listen(app.get('port'), function () {

@@ -4,13 +4,14 @@
  * @Author: Colorssk
  * @Date: 2019-10-15 13:57:13
  * @LastEditors: Colorssk
- * @LastEditTime: 2019-10-29 17:56:13
+ * @LastEditTime: 2019-10-30 16:22:17
  */
 let loaderUtils = require('loader-utils')
 let validateOptions = require('schema-utils')
 let fs = require('fs')
 let util = require('./transferTest')
 function loader(source){
+    let fileName = process.argv[process.argv.length - 1]
     this.cacheable(false)//打包的时候关掉缓存，表示每次都会重新打包
     //this.cacheable && this.cacheable()// 不穿参数表示默认打包
     let options = loaderUtils.getOptions(this)
@@ -32,26 +33,44 @@ function loader(source){
         //     //读取到数据之后，进行转码：
         //     trans
         // })
-        var fnHtml = data=>{
+        var fnHtml = (data,fn)=>{
             fs.writeFile('./store.vue',data,{encoding:'utf8'}, (err)=>{//此处的文件名需要可配置
                 if (err) {
-                    
                     throw err;
-                    
                 }
+                fn()
+                
             })   
         }
-        var fnJs = data => {
-            fs.writeFile('./store2.vue',data,{encoding:'utf8',flag: 'a'}, (err)=>{//此处的文件名需要可配置
+        var fnJs = (data) => {
+            fs.writeFile('./store.vue',data,{encoding:'utf8',flag: 'a'}, (err)=>{//此处的文件名需要可配置
                 if (err) {
                     console.log('写入失败------------------------------------')
                     throw err;
                     
                 }
-               cb(null,source)
+                // 最后一步，整合导出文件
+                if(fileName.length>0){
+                    buildVue()
+                }
+                cb(null,source)
             })
         }
-        util.trans(options.filename,fnHtml,util.transJs(options.fileJSname,fnJs))//序列化之后的数据操作
+        var buildVue = () => {
+            fs.readFile('./store.vue','utf-8', (err, data) => {
+        
+                if (err) { console.log('报错了---------------'); throw err; }
+                fs.writeFile('./build/'+fileName+'.vue',data,{encoding:'utf8',flag: 'a'}, (err)=>{//此处的文件名需要可配置
+                    if (err) {
+                        console.log('写入失败------------------------------------')
+                        throw err;
+                    }
+                   
+                })
+            });
+            
+        }
+        util.trans(options.filename,fnHtml,util.transJs.bind(null,options.fileJSname,fnJs))//序列化之后的数据操作
         
     }else{
         //cb也是一个异步所以可以并列调用

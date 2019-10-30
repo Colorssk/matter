@@ -4,7 +4,7 @@
  * @Author: Colorssk
  * @Date: 2019-09-19 11:05:12
  * @LastEditors: Colorssk
- * @LastEditTime: 2019-10-29 17:51:11
+ * @LastEditTime: 2019-10-30 09:18:35
  */
 const fs = require('fs')
 const htmlModel = require('./htmlModel.js')
@@ -21,7 +21,7 @@ var filterSign = (st)=>{
  * @param {*} fileName 
  * @param {*} 回掉执行文件的压入 
  */
-var trans = (fileName,fn)=>{
+var trans = (fileName,fn,fn2)=>{
     fs.readFile(__dirname + "/"+fileName,'utf-8', (err, data) => {
         
         if (err) { console.log('报错了---------------'); throw err; }
@@ -32,7 +32,7 @@ var trans = (fileName,fn)=>{
         getHtml(rootData)
         //getJs(rootData)
         str = filterSign('<template><div>'+String(str)+'</div></template>')
-        fn(str)
+        fn(str,fn2)
     });
 }
 var getHtml = (data) => {
@@ -106,7 +106,7 @@ var transJs = (JSFileName,fn) => {
             forms[key].forEach(el=>{
                 tempdata += el + ':null,'    
             })
-            formStr += tempdata + '}'
+            formStr += tempdata + '},'
         })
 
         var tableStr = ''
@@ -121,7 +121,8 @@ var transJs = (JSFileName,fn) => {
             selectStr += el + 's:null,'
         });
         var totalStr = formStr + tableStr + selectStr
-        fn(totalStr)
+        var jsStr = jsModel.replace('$data',totalStr).replace('$methods','')
+        fn(jsStr)
     });
 }
 // trans()
