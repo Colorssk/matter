@@ -4,7 +4,7 @@
  * @Author: Colorssk
  * @Date: 2019-09-06 18:02:20
  * @LastEditors: Colorssk
- * @LastEditTime: 2019-09-06 18:02:20
+ * @LastEditTime: 2019-10-31 11:01:51
  */
 import Vue from 'vue'
 
@@ -57,6 +57,7 @@ Vue.config.productionTip = false
 Vue.prototype.$addPannel = addPannelCom
 Vue.prototype.$axios = axios
 Vue.prototype._ = lodash
+
 
 new Vue({
   el: '#app',

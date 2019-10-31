@@ -4,7 +4,7 @@
  * @Author: Colorssk
  * @Date: 2019-10-08 15:37:46
  * @LastEditors: Colorssk
- * @LastEditTime: 2019-10-30 16:25:38
+ * @LastEditTime: 2019-10-31 09:41:24
  */
 var express = require('express');
 var app = express();
@@ -87,7 +87,7 @@ app.get('/getProcessArg', function(req, res, next) {
 
   // 获取参数
   var query = process.argv[(process.argv.length-1)]
-  console.log(query,'-------------------------------------')
+  console.log(query,'server-------------------------------------')
   res.send(query)
 });
 const HOST = 'localhost'
