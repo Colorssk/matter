@@ -4,7 +4,7 @@
  * @Author: Colorssk
  * @Date: 2019-10-15 13:57:13
  * @LastEditors: Colorssk
- * @LastEditTime: 2019-10-31 11:07:55
+ * @LastEditTime: 2019-10-30 16:22:17
  */
 let loaderUtils = require('loader-utils')
 let validateOptions = require('schema-utils')
@@ -12,9 +12,6 @@ let fs = require('fs')
 let util = require('./transferTest')
 function loader(source){
     let fileName = process.argv[process.argv.length - 1]
-    console.log(fileName,'-----------------------------------')
-    
-    console.log(process.argv,'-----------------------------------')
     this.cacheable(false)//打包的时候关掉缓存，表示每次都会重新打包
     //this.cacheable && this.cacheable()// 不穿参数表示默认打包
     let options = loaderUtils.getOptions(this)
@@ -63,7 +60,7 @@ function loader(source){
             fs.readFile('./store.vue','utf-8', (err, data) => {
         
                 if (err) { console.log('报错了---------------'); throw err; }
-                fs.writeFile('./src/views/addPage/'+fileName+'.vue',data,{encoding:'utf8',flag: 'a'}, (err)=>{//此处的文件名需要可配置
+                fs.writeFile('./build/'+fileName+'.vue',data,{encoding:'utf8',flag: 'a'}, (err)=>{//此处的文件名需要可配置
                     if (err) {
                         console.log('写入失败------------------------------------')
                         throw err;

@@ -1,4 +1,4 @@
-﻿<!--
+<!--
  * @Descripttion: 
  * @version: 
  * @Author: Colorssk
@@ -12,7 +12,3 @@
 
 
 目前htmlbug 只能放在一个可包含的元素内(目前是:card)才能生成正确的html文档
-
-
-联调输出
-npm run cc -- -n kk

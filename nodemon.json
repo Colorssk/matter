@@ -4,8 +4,7 @@
       ".git",
       "node_modules/**/node_modules",
       ".eslintrc",
-      "public",
-      "src/views/addPage"
+      "public"
     ],
     "verbose": true,
     "env": {
